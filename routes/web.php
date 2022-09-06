@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth'], function() {
 Route::group(['middleware' => ['auth', 'active']], function() {
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-    //Route::get('/dashboard-filter/{start_date}/{end_date}', 'HomeController@dashboardFilter');
+    Route::get('/dashboard-filter/{start_date}/{end_date}', 'HomeController@dashboardFilter');
 
     Route::get('language_switch/{locale}', 'LanguageController@switchLanguage');
 
@@ -292,7 +292,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
     Route::post('notifications/store', 'NotificationController@store')->name('notifications.store');
     Route::get('notifications/mark-as-read', 'NotificationController@markAsRead');
 
-    //Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home', 'HomeController@index')->name('home');
     //Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
 });
 
