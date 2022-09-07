@@ -53,9 +53,9 @@
       <div class="container">
         <div class="form-outer text-center d-flex align-items-center">
           <div class="form-inner">
-            <div class="logo"><span>ERP VENTAS</span></div>
-            @if(session()->has('delete_message'))
-            <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('delete_message') }}</div> 
+            <div class="logo"><span>CODE FACTURACION</span></div>
+            @if(session()->has('error'))
+            <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('error') }}</div> 
             @endif
             <form method="POST" action="{{ route('login') }}" id="login-form">
               @csrf
