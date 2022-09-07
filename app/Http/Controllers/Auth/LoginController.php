@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-//use App\Providers\RouteServiceProvider;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -79,12 +79,12 @@ class LoginController extends Controller
 
 
         //attempt para usar en array para consultar varias condiciones en auth
-        //if(auth()->attempt(array($fieldType => $input['name'], 'password' => $input['password'])))
         if($us)
         {   
             if(Hash::check($dato['password'],$us->password)){
                 //return response()->json(array('salida'=>$us),200);
-                return redirect('/');
+                if(auth()->attempt(array($fieldType => $input['name'], 'password' => $input['password'])))
+                    return redirect('/');
             }
             else{
                 return redirect()->route('login')
