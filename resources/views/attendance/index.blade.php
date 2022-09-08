@@ -27,8 +27,8 @@
             <tbody>
                 @foreach($lims_attendance_all as $key=>$attendance)
                 @php 
-                    $employee = \App\Employee::find($attendance->employee_id);
-                    $user = \App\User::find($attendance->user_id);
+                    $employee = \App\Models\Employee::find($attendance->employee_id);
+                    $user = \App\Models\User::find($attendance->user_id);
                 @endphp
                 <tr data-id="{{$attendance->id}}">
                     <td>{{$key}}</td>

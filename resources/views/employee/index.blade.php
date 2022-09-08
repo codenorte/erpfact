@@ -39,7 +39,7 @@
             </thead>
             <tbody>
                 @foreach($lims_employee_all as $key=>$employee)
-                @php $department = \App\Department::find($employee->department_id); @endphp
+                @php $department = \App\Models\Department::find($employee->department_id); @endphp
                 <tr data-id="{{$employee->id}}">
                     <td>{{$key}}</td>
                     @if($employee->image)

@@ -26,8 +26,8 @@
             <tbody>
                 @foreach($lims_payroll_all as $key=>$payroll)
                 @php 
-                    $employee = \App\Employee::find($payroll->employee_id);
-                    $account = \App\Account::find($payroll->account_id);
+                    $employee = \App\Models\Employee::find($payroll->employee_id);
+                    $account = \App\Models\Account::find($payroll->account_id);
                 @endphp
                 <tr data-id="{{$payroll->id}}">
                     <td>{{$key}}</td>

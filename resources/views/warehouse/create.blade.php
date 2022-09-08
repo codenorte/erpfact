@@ -33,13 +33,13 @@
             <tbody>
                 @foreach($lims_warehouse_all as $key=>$warehouse)
                 <?php
-                    $number_of_product = App\Product_Warehouse::
+                    $number_of_product = App\Models\Product_Warehouse::
                     join('products', 'product_warehouse.product_id', '=', 'products.id')
                     ->where([ ['product_warehouse.warehouse_id', $warehouse->id],
                               ['products.is_active', true]
                     ])->count();
 
-                    $stock_qty = App\Product_Warehouse::
+                    $stock_qty = App\Models\Product_Warehouse::
                     join('products', 'product_warehouse.product_id', '=', 'products.id')
                     ->where([ ['product_warehouse.warehouse_id', $warehouse->id],
                               ['products.is_active', true]
