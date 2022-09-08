@@ -19,15 +19,15 @@ class CreateProductosTable extends Migration
 
             $table->integer('codigo');
             $table->string('codigo_principal');
-            $table->string('codigo_auxiliar');
+            $table->string('codigo_auxiliar')->nullable()->default(null);
             $table->string('nombre');
             $table->float('valor_unitario');
             $table->string('tipo_producto');
             $table->string('iva');
-            $table->string('ice');
-            $table->string('irbpnr');
-            $table->string('estado');  
-            $table->string('descripcion');
+            $table->string('ice')->nullable()->default(null);
+            $table->string('irbpnr')->nullable()->default(null);
+            $table->string('estado')->nullable()->default(null);
+            $table->string('descripcion')->nullable()->default(null);
             $table->timestamps();
         });
     }

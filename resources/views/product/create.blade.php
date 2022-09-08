@@ -673,7 +673,7 @@
                             url:'{{route('products.store')}}',
                             data: $("#product-form").serialize(),
                             success:function(response){
-                                //console.log(response);
+                                console.log(response);
                                 location.href = '../products';
                             },
                             error:function(response) {

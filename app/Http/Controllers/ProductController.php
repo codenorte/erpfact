@@ -10,6 +10,9 @@ use App\Models\Unit;
 use App\Models\Tax;
 use App\Models\Warehouse;
 use App\Models\Supplier;
+
+use App\Models\Productos;
+
 use App\Models\Product;
 use App\Models\Product_Warehouse;
 use App\Models\Product_Supplier;
@@ -200,6 +203,8 @@ class ProductController extends Controller
             $lims_category_list = Category::where('is_active', true)->get();
             $lims_unit_list = Unit::where('is_active', true)->get();
             $lims_tax_list = Tax::where('is_active', true)->get();
+
+ 
             return view('product.create',compact('lims_product_list', 'lims_brand_list', 'lims_category_list', 'lims_unit_list', 'lims_tax_list'));
         }
         else
@@ -208,12 +213,13 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+
         $this->validate($request, [
             'code' => [
                 'max:255',
                     Rule::unique('products')->where(function ($query) {
                     return $query->where('is_active', 1);
-                }),
+                        }),
             ],
             'name' => [
                 'max:255',
@@ -261,6 +267,27 @@ class ProductController extends Controller
             $file->move('product/files', $fileName);
             $data['file'] = $fileName;
         }
+        
+        $prod = new Productos();
+
+        $prod->codigo=$data['code'];
+        $prod->codigo_principal=$data['code'];
+        $prod->codigo_auxiliar=$data['code'];
+        $prod->nombre=$data['name'];
+        $prod->valor_unitario=$data['price'];
+        $prod->tipo_producto=$data['type'];
+        $prod->iva=0;
+        $prod->ice=0;
+        $prod->irbpnr=$data['code'];
+        $prod->estado=1;
+        $prod->descripcion=$data['product_details'];
+
+        $prod->save();
+
+
+        
+
+
         $lims_product_data = Product::create($data);
         //dealing with product variant
         if(isset($data['is_variant'])) {

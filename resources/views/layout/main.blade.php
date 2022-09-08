@@ -895,6 +895,7 @@
                       </ul>
                 </li>
                 @endif
+
                 <li class="nav-item">
                       <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-web"></i> <span>{{__('file.language')}}</span> <i class="fa fa-angle-down"></i></a>
                       <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
@@ -942,6 +943,7 @@
                           </li>
                       </ul>
                 </li>
+                
                 <li class="nav-item"> 
                     <a class="dropdown-item" href="https://ventas.programacionparacompartir.com/" target="_blank"><i class="dripicons-information"></i> {{trans('file.Help')}}</a>
                 </li>
