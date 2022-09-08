@@ -33,6 +33,9 @@ nav.navbar a.menu-btn:hover {
 	color: #7c5cc4;
     text-decoration: none;
 }
+.side-navbar li .active {
+    background: #dee2e6;
+}
 
 .side-navbar .sidenav-header {
     background: #7c5cc4;

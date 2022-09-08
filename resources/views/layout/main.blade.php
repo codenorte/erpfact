@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="icon" type="image/png" href="{{url('logo', $general_setting->site_logo)}}" />
-    <title>ERP VENTAS</title>
+    <title>@yield('title','Inicio') | Code Inventario</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -223,7 +223,7 @@
                   @if($sale_index_permission_active)
                   <li id="sale-list-menu"><a href="{{route('sales.index')}}">{{trans('file.Sale List')}}</a></li>
                     @if($sale_add_permission_active)
-                    <li><a href="{{route('sale.pos')}}">POS</a></li>
+                    <li><a href="{{route('sale.pos')}}">PUNTO DE VENTA</a></li>
                     <li id="sale-create-menu"><a href="{{route('sales.create')}}">{{trans('file.Add Sale')}}</a></li>
                     <li id="sale-import-menu"><a href="{{url('sales/sale_by_csv')}}">{{trans('file.Import Sale By CSV')}}</a></li>
                     @endif
@@ -873,7 +873,7 @@
                   ])->first();
                 ?>
                 @if($add_permission_active)
-                <li class="nav-item"><a class="dropdown-item btn-pos btn-sm" href="{{route('sale.pos')}}"><i class="dripicons-shopping-bag"></i><span> POS</span></a></li>
+                <li class="nav-item"><a class="dropdown-item btn-pos btn-sm" href="{{route('sale.pos')}}"><i class="dripicons-shopping-bag"></i><span> PUNTO DE VENTA </span></a></li>
                 @endif      
                 <li class="nav-item"><a id="btnFullscreen"><i class="dripicons-expand"></i></a></li>
                 @if(\Auth::user()->role_id <= 2)

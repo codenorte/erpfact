@@ -9,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>ERP VENTAS</title>
+    <title>@yield('title','Inicio') | Code Inventario</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

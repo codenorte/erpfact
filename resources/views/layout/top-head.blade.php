@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="icon" type="image/png" href="{{url('logo', $general_setting->site_logo)}}" />
-    <title>ERP VENTAS</title>
+    <title>@yield('title','Inicio') | Code Inventario</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -115,7 +115,7 @@
                         ])->get();
                       else
                         $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
-                      $lims_account_list = \App\Account::where('is_active', true)->get();
+                      $lims_account_list = \App\Models\Account::where('is_active', true)->get();
                     
                     ?>
                       <div class="row">
