@@ -89,7 +89,6 @@ class CategoryController extends Controller
                 $activo="";
                 if ($category->is_active)
                     $activo="<small class='badge badge-success'>activo</small>";
-
                 else
                     $activo="<small class='badge badge-danger'>inactivo</small>";
 
@@ -100,8 +99,11 @@ class CategoryController extends Controller
                 else
                     $nestedData['parent_id'] = "N/A";
 
-                $nestedData['number_of_product'] = $category->product()->where('is_active', true)->count();
+                $total_productos= $category->product()->where('is_active', true)->count();
+
+                $nestedData['number_of_product'] = $total_productos;
                 $nestedData['stock_qty'] = $category->product()->where('is_active', true)->sum('qty');
+
                 $total_price = $category->product()->where('is_active', true)->sum(DB::raw('price * qty'));
                 $total_cost = $category->product()->where('is_active', true)->sum(DB::raw('cost * qty'));
                 
@@ -110,25 +112,48 @@ class CategoryController extends Controller
                 else
                     $nestedData['stock_worth'] = $total_price.' '.config('currency').' / '.$total_cost.' '.config('currency');
 
-                $nestedData['options'] = '<div class="btn-group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
-                              <span class="caret"></span>
-                              <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li>
-                                    <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
-                                </li>
-                                <li>
-                                    <button type="button" data-idcategory="'.$category->id.'" class="open-EditEstadoCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModalEstado" ><i class="dripicons-pencil"></i> '.trans("file.status").'</button>
-                                </li>
-                                <li class="divider"></li>'.
-                                \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
-                                <li>
-                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
-                                </li>'.\Form::close().'
-                            </ul>
-                        </div>';
+                if ($total_productos>0){
+                    $nestedData['options'] = '<div class="btn-group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
+                                  <span class="caret"></span>
+                                  <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                                    <li>
+                                        <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-idcategory="'.$category->id.'" class="open-EditEstadoCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModalEstado" ><i class="dripicons-pencil"></i> '.trans("file.status").'</button>
+                                    </li>
+                                    <li class="divider"></li>'.
+                                    \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
+                                </ul>
+                            </div>';
+
+                }
+                else{
+                    $nestedData['options'] = '<div class="btn-group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
+                                  <span class="caret"></span>
+                                  <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                                    <li>
+                                        <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-idcategory="'.$category->id.'" class="open-EditEstadoCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModalEstado" ><i class="dripicons-pencil"></i> '.trans("file.status").'</button>
+                                    </li>
+                                    <li class="divider"></li>'.
+                                    \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
+                                    <li>
+                                      <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
+                                    </li>'.\Form::close().'
+                                </ul>
+                            </div>';
+                }
+
+
                 $data[] = $nestedData;
             }
         }
