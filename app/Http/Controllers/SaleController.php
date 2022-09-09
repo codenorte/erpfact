@@ -48,6 +48,7 @@ use Srmklive\PayPal\Services\AdaptivePayments;
 use GeniusTS\HijriDate\Date;
 use Illuminate\Support\Facades\Validator;
 
+//return response()->json(array('data'=>$objeto),200);
 class SaleController extends Controller
 {
     public function index()

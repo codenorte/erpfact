@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Permission;
 use App\Mail\UserNotification;
 use Illuminate\Support\Facades\Mail;
 
+//return response()->json(array('data'=>$objeto),200);
 class SupplierController extends Controller
 {
     public function index()

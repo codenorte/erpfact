@@ -16,6 +16,7 @@ use Twilio\Rest\Client;
 use Clickatell\Rest;
 use Clickatell\ClickatellException;
 
+//return response()->json(array('data'=>$objeto),200);
 class SettingController extends Controller
 {
     public function emptyDatabase()

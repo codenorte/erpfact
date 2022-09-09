@@ -7,6 +7,7 @@ use App\Models\Warehouse;
 use Illuminate\Validation\Rule;
 use Keygen;
 
+//return response()->json(array('data'=>$objeto),200);
 class WarehouseController extends Controller
 {
 

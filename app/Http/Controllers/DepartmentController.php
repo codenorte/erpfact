@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Department;
 use Illuminate\Validation\Rule;
 
+//return response()->json(array('data'=>$objeto),200);
 class DepartmentController extends Controller
 {
     

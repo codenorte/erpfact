@@ -9,6 +9,7 @@ use Keygen;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+//return response()->json(array('data'=>$objeto),200);
 class CouponController extends Controller
 {
     public function index()

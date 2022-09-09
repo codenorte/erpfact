@@ -16,7 +16,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Auth;
 
-
+//return response()->json(array('data'=>$objeto),200);
 class AccountsController extends Controller
 {
     public function index()

@@ -7,6 +7,7 @@ use App\Models\ExpenseCategory;
 use Keygen;
 use Illuminate\Validation\Rule;
 
+//return response()->json(array('data'=>$objeto),200);
 class ExpenseCategoryController extends Controller
 {
     public function index()

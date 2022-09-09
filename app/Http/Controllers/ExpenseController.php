@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Permission;
 use Auth;
 use DB;
 
+//return response()->json(array('data'=>$objeto),200);
 class ExpenseController extends Controller
 {
     public function index()

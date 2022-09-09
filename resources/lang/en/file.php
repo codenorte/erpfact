@@ -315,6 +315,7 @@ return [
 	'Update Sale' => 'Update Sale',
 	'Update Product' => 'Update Product',
 	'Update Category' => 'Update Category',
+	'Update Status Category' => 'Update Status Category',
 	'Update Gift Card' => 'Update Gift Card',
 	'Delivery Reference' => 'Delivery Reference',
 	'Sale Reference' => 'Sale Reference',

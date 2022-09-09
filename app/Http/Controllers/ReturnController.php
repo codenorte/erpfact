@@ -25,6 +25,7 @@ use App\Mail\UserNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+//return response()->json(array('data'=>$objeto),200);
 class ReturnController extends Controller
 {
     public function index()

@@ -26,6 +26,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
 
+//return response()->json(array('data'=>$objeto),200);
 class PurchaseController extends Controller
 {
     public function index()

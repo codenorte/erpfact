@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\SendNotification;
 use Auth;
 
+//return response()->json(array('data'=>$objeto),200);
 class NotificationController extends Controller
 {
     public function store(Request $request)

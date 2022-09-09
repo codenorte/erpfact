@@ -12,6 +12,7 @@ use App\Models\Department;
 use Auth;
 use Illuminate\Validation\Rule;
 
+//return response()->json(array('data'=>$objeto),200);
 class EmployeeController extends Controller
 {
     

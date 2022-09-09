@@ -71,6 +71,38 @@
       </div>
     </div>
 </div>
+<!-- Edit Modal Estado-->
+<div id="editModalEstado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+  <div role="document" class="modal-dialog">
+    <div class="modal-content">
+    <form method="POST" action=" {{route('category.updateEstado')}} " enctype="multipart/form-data">
+      {{ csrf_field() }}
+      <div class="modal-header">
+        <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Status Category')}}</h5>
+        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12 form-group text-center">
+                {{trans('file.Update Status')}} <span id="estadoactual"></span>
+            </div>
+            <div class="col-md-12 text-center">
+                <hr>
+                <h3>
+                    A <span id="estadocambio"></span>
+                </h3>
+                <input type="hidden" name="idcategory" id="idcategory">
+            </div>
+        </div>
+            
+        <div class="form-group">       
+            <input type="submit" value="{{trans('file.save')}}" class="btn btn-primary">
+          </div>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
 <!-- Edit Modal -->
 <div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
   <div role="document" class="modal-dialog">
@@ -178,6 +210,27 @@
           });
     });
 
+    $(document).on("click", ".open-EditEstadoCategoryDialog", function(){
+          var url ="category/";
+          var id = $(this).data('idcategory');
+          url = url.concat(id).concat("/edit");
+
+          
+          $.get(url, function(data){
+            console.log(data);
+            $("#editModalEstado input[name='idcategory']").val(data['id']);
+            if(data['is_active']){
+                document.getElementById('estadoactual').innerHTML = 'activo';
+                document.getElementById('estadocambio').innerHTML = 'INACTIVO';
+            }
+            else{
+                document.getElementById('estadoactual').innerHTML = 'Inactivo';
+                document.getElementById('estadocambio').innerHTML = 'ACTIVO';
+            }
+
+          });
+    });
+
     $('#category-table').DataTable( {
         "processing": true,
         "serverSide": true,
@@ -188,6 +241,7 @@
         },
         "createdRow": function( row, data, dataIndex ) {
             $(row).attr('data-id', data['id']);
+            //console.log(data);
         },
         "columns": [
             {"data": "key"},

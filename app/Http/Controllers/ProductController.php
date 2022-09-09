@@ -25,6 +25,7 @@ use DB;
 use App\Models\Variant;
 use App\Models\ProductVariant;
 
+//return response()->json(array('data'=>$objeto),200);
 class ProductController extends Controller
 {
     public function index()

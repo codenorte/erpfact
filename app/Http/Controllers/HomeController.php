@@ -16,6 +16,7 @@ use App\Models\Product_Sale;
 use DB;
 use Auth;
 
+//return response()->json(array('data'=>$objeto),200);
 class HomeController extends Controller
 {
     public function __construct()

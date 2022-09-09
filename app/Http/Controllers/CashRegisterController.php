@@ -10,6 +10,7 @@ use App\Models\Returns;
 use App\Models\Expense;
 use Auth;
 
+//return response()->json(array('data'=>$objeto),200);
 class CashRegisterController extends Controller
 {
 	public function index()

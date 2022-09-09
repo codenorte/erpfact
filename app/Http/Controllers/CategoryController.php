@@ -11,16 +11,18 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\Rule;
 
+//return response()->json(array('data'=>$objeto),200);
 class CategoryController extends Controller
 {
+    //return response()->json(array('data'=>$objeto),200);
     public function index()
     {
         $role = Role::find(Auth::user()->role_id);
-        //dd($role->hasPermissionTo('category'));
         if($role->hasPermissionTo('category')) {
             $lims_categories = Category::where('is_active', true)->pluck('name', 'id');
             $lims_category_all = Category::where('is_active', true)->get();
-
+            
+            //return response()->json(array('data'=>$lims_categories),200);
 
             return view('category.create',compact('lims_categories', 'lims_category_all'));
         }
@@ -41,6 +43,7 @@ class CategoryController extends Controller
         $totalData = Category::where('is_active', true)->count();
         $totalFiltered = $totalData; 
 
+
         if($request->input('length') != -1)
             $limit = $request->input('length');
         else
@@ -50,7 +53,7 @@ class CategoryController extends Controller
         $dir = $request->input('order.0.dir');
         if(empty($request->input('search.value')))
             $categories = Category::offset($start)
-                        ->where('is_active', true)
+                        //->where('is_active', true)
                         ->limit($limit)
                         ->orderBy($order,$dir)
                         ->get();
@@ -59,7 +62,7 @@ class CategoryController extends Controller
             $search = $request->input('search.value'); 
             $categories =  Category::where([
                             ['name', 'LIKE', "%{$search}%"],
-                            ['is_active', true]
+                            //['is_active', true]
                         ])->offset($start)
                         ->limit($limit)
                         ->orderBy($order,$dir)->get();
@@ -72,6 +75,7 @@ class CategoryController extends Controller
         $data = array();
         if(!empty($categories))
         {
+            //return response()->json(array('data'=>$categories),200);
             foreach ($categories as $key=>$category)
             {
                 $nestedData['id'] = $category->id;
@@ -81,8 +85,15 @@ class CategoryController extends Controller
                     $nestedData['image'] = '<img src="'.url('images/category', $category->image).'" height="70" width="70">';
                 else
                     $nestedData['image'] = '<img src="'.url('images/product/zummXD2dvAtI.png').'" height="80" width="80">';
+                //estado activo inactivo
+                $activo="";
+                if ($category->is_active)
+                    $activo="<small class='badge badge-success'>activo</small>";
 
-                $nestedData['name'] = $category->name;
+                else
+                    $activo="<small class='badge badge-danger'>inactivo</small>";
+
+                $nestedData['name'] = $category->name.'</br>'.$activo;
 
                 if($category->parent_id)
                     $nestedData['parent_id'] = Category::find($category->parent_id)->name;
@@ -107,6 +118,9 @@ class CategoryController extends Controller
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
                                     <button type="button" data-id="'.$category->id.'" class="open-EditCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i> '.trans("file.edit").'</button>
+                                </li>
+                                <li>
+                                    <button type="button" data-idcategory="'.$category->id.'" class="open-EditEstadoCategoryDialog btn btn-link" data-toggle="modal" data-target="#editModalEstado" ><i class="dripicons-pencil"></i> '.trans("file.status").'</button>
                                 </li>
                                 <li class="divider"></li>'.
                                 \Form::open(["route" => ["category.destroy", $category->id], "method" => "DELETE"] ).'
@@ -188,6 +202,22 @@ class CategoryController extends Controller
         }
         $lims_category_data = Category::findOrFail($request->category_id);
         $lims_category_data->update($input);
+        return redirect('category')->with('message', 'Category updated successfully');
+    }
+    public function updateEstado(Request $request)
+    {
+
+        $data=$request->all();
+
+        $lims_category_data = Category::findOrFail($request['idcategory']);
+        $estado=1;
+        if($lims_category_data['is_active'])
+            $estado=0;
+
+        $lims_category_data->is_active=$estado;
+        $lims_category_data->save();
+        //return response()->json(array('data'=>$lims_category_data),200);
+
         return redirect('category')->with('message', 'Category updated successfully');
     }
 

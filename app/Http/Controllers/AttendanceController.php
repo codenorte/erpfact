@@ -11,6 +11,7 @@ use DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+//return response()->json(array('data'=>$objeto),200);
 class AttendanceController extends Controller
 {
     public function index()

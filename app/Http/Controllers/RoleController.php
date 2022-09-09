@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+//return response()->json(array('data'=>$objeto),200);
 class RoleController extends Controller
 {
     public function index()

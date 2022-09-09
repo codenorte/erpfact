@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+//return response()->json(array('data'=>$objeto),200);
 class TestController extends Controller
 {
 

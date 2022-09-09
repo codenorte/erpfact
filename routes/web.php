@@ -48,6 +48,8 @@ Route::group(['middleware' => ['auth', 'active']], function() {
     Route::post('category/deletebyselection', 'CategoryController@deleteBySelection');
     Route::post('category/category-data', 'CategoryController@categoryData');
     Route::resource('category', 'CategoryController');
+    Route::post('category/updateEstado', 'CategoryController@updateEstado')->name('category.updateEstado');
+
 
     Route::post('importbrand', 'BrandController@importBrand')->name('brand.import');
     Route::post('brand/deletebyselection', 'BrandController@deleteBySelection');

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Redirect;
 use App\Models\Language;
 
+//return response()->json(array('data'=>$objeto),200);
 class LanguageController extends Controller
 {
     public function switchLanguage($locale)
