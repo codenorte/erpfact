@@ -22,24 +22,58 @@
             <a href="#" data-toggle="modal" data-target="#importProduct" class="btn btn-primary"><i class="dripicons-copy"></i> {{__('file.import_product')}}</a>
         @endif
     </div>
-    <div class="table-responsive">
-        <table id="product-data-table" class="table" style="width: 100%">
-            <thead>
-                <tr>
-                    <th class="not-exported"></th>
-                    <th>{{trans('file.Image')}}</th>
-                    <th>{{trans('file.name')}}</th>
-                    <th>{{trans('file.Code')}}</th>
-                    <th>{{trans('file.Brand')}}</th>
-                    <th>{{trans('file.category')}}</th>
-                    <th>{{trans('file.Quantity')}}</th>
-                    <th>{{trans('file.Unit')}}</th>
-                    <th>{{trans('file.Price')}}</th>
-                    <th class="not-exported">{{trans('file.action')}}</th>
-                </tr>
-            </thead>
-            
-        </table>
+    <br><br>
+    <hr>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Productos Activos</button>
+            <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Productos Inactivos</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+
+            <div class="table-responsive">
+                <table id="product-data-table" class="table" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th class="not-exported"></th>
+                            <th>{{trans('file.Image')}}</th>
+                            <th>{{trans('file.name')}}</th>
+                            <th>{{trans('file.Code')}}</th>
+                            <th>{{trans('file.Brand')}}</th>
+                            <th>{{trans('file.category')}}</th>
+                            <th>{{trans('file.Quantity')}}</th>
+                            <th>{{trans('file.Unit')}}</th>
+                            <th>{{trans('file.Price')}}</th>
+                            <th class="not-exported">{{trans('file.action')}}</th>
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <div class="table-responsive">
+                <table id="productinactive-data-table" class="table" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th class="not-exported"></th>
+                            <th>{{trans('file.Image')}}</th>
+                            <th>{{trans('file.name')}}</th>
+                            <th>{{trans('file.Code')}}</th>
+                            <th>{{trans('file.Brand')}}</th>
+                            <th>{{trans('file.category')}}</th>
+                            <th>{{trans('file.Quantity')}}</th>
+                            <th>{{trans('file.Unit')}}</th>
+                            <th>{{trans('file.Price')}}</th>
+                            <th class="not-exported">{{trans('file.action')}}</th>
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -291,7 +325,7 @@
         $('#product-details').modal('show');
         $('#product-img-slider').carousel(0);
     }
-
+    //pdocutos activos table get data 
     $(document).ready(function() {
         var table = $('#product-data-table').DataTable( {
             responsive: true,
@@ -303,6 +337,173 @@
             "serverSide": true,
             "ajax":{
                 url:"products/product-data",
+                data:{
+                    all_permission: all_permission
+                },
+                dataType: "json",
+                type:"post"
+            },
+            "createdRow": function( row, data, dataIndex ) {
+                $(row).addClass('product-link');
+                $(row).attr('data-product', data['product']);
+                $(row).attr('data-imagedata', data['imagedata']);
+            },
+            "columns": [
+                {"data": "key"},
+                {"data": "image"},
+                {"data": "name"},
+                {"data": "code"},
+                {"data": "brand"},
+                {"data": "category"},
+                {"data": "qty"},
+                {"data": "unit"},
+                {"data": "price"},
+                {"data": "options"},
+            ],
+            'language': {
+                /*'searchPlaceholder': "{{trans('file.Type Product Name or Code...')}}",*/
+                'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
+                 "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
+                "search":  '{{trans("file.Search")}}',
+                'paginate': {
+                        'previous': '<i class="dripicons-chevron-left"></i>',
+                        'next': '<i class="dripicons-chevron-right"></i>'
+                }
+            },
+            order:[['2', 'asc']],
+            'columnDefs': [
+                {
+                    "orderable": false,
+                    'targets': [0, 1, 9]
+                },
+                {
+                    'render': function(data, type, row, meta){
+                        if(type === 'display'){
+                            data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                        }
+
+                       return data;
+                    },
+                    'checkboxes': {
+                       'selectRow': true,
+                       'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                    },
+                    'targets': [0]
+                }
+            ],
+            'select': { style: 'multi', selector: 'td:first-child'},
+            'lengthMenu': [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            dom: '<"row"lfB>rtip',
+            buttons: [
+                {
+                    extend: 'pdf',
+                    text: '{{trans("file.PDF")}}',
+                    exportOptions: {
+                        columns: ':visible:not(.not-exported)',
+                        rows: ':visible',
+                        stripHtml: false
+                    },
+                    customize: function(doc) {
+                        for (var i = 1; i < doc.content[1].table.body.length; i++) {
+                            if (doc.content[1].table.body[i][0].text.indexOf('<img src=') !== -1) {
+                                var imagehtml = doc.content[1].table.body[i][0].text;
+                                var regex = /<img.*?src=['"](.*?)['"]/;
+                                var src = regex.exec(imagehtml)[1];
+                                var tempImage = new Image();
+                                tempImage.src = src;
+                                var canvas = document.createElement("canvas");
+                                canvas.width = tempImage.width;
+                                canvas.height = tempImage.height;
+                                var ctx = canvas.getContext("2d");
+                                ctx.drawImage(tempImage, 0, 0);
+                                var imagedata = canvas.toDataURL("image/png");
+                                delete doc.content[1].table.body[i][0].text;
+                                doc.content[1].table.body[i][0].image = imagedata;
+                                doc.content[1].table.body[i][0].fit = [30, 30];
+                            }
+                        }
+                    },
+                },
+                {
+                    extend: 'csv',
+                    text: '{{trans("file.CSV")}}',
+                    exportOptions: {
+                        columns: ':visible:not(.not-exported)',
+                        rows: ':visible',
+                        format: {
+                            body: function ( data, row, column, node ) {
+                                if (column === 0 && (data.indexOf('<img src=') !== -1)) {
+                                    var regex = /<img.*?src=['"](.*?)['"]/;
+                                    data = regex.exec(data)[1];                 
+                                }
+                                return data;
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '{{trans("file.Print")}}',
+                    exportOptions: {
+                        columns: ':visible:not(.not-exported)',
+                        rows: ':visible',
+                        stripHtml: false
+                    }
+                },
+                {
+                    text: '{{trans("file.delete")}}',
+                    className: 'buttons-delete',
+                    action: function ( e, dt, node, config ) {
+                        if(user_verified == '1') {
+                            product_id.length = 0;
+                            $(':checkbox:checked').each(function(i){
+                                if(i){
+                                    var product_data = $(this).closest('tr').data('product');
+                                    product_id[i-1] = product_data[12];
+                                }
+                            });
+                            if(product_id.length && confirmDelete()) {
+                                $.ajax({
+                                    type:'POST',
+                                    url:'products/deletebyselection',
+                                    data:{
+                                        productIdArray: product_id
+                                    },
+                                    success:function(data){
+                                        dt.rows({ page: 'current', selected: true }).deselect();
+                                        dt.rows({ page: 'current', selected: true }).remove().draw(false);
+                                    }
+                                });
+                            }
+                            else if(!product_id.length)
+                                alert('No product is selected!');
+                        }
+                        else
+                            alert('This feature is disable for demo!');
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    text: '{{trans("file.Column visibility")}}',
+                    columns: ':gt(0)'
+                },
+            ],
+        } );
+
+    } );
+
+    //pdocutos inactivos table get data 
+    $(document).ready(function() {
+        var table = $('#productinactive-data-table').DataTable( {
+            responsive: true,
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+            "processing": true,
+            "serverSide": true,
+            "ajax":{
+                url:"products/productinactive-data",
                 data:{
                     all_permission: all_permission
                 },

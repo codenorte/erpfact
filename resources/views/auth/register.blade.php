@@ -53,7 +53,7 @@
       <div class="container">
         <div class="form-outer text-center d-flex align-items-center">
           <div class="form-inner">
-            <div class="logo"><spanS>ERP VENTAS</span></div>
+            <div class="logo"><span>CODE INVENTARIO</span></div>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
               <div class="form-group-material">

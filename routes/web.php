@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+App::setLocale("es");
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -34,6 +36,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
     Route::get('/dashboard-filter/{start_date}/{end_date}', 'HomeController@dashboardFilter');
 
     Route::get('language_switch/{locale}', 'LanguageController@switchLanguage');
+    Route::get('cambiarIdioma', 'LanguageController@cambiarIdioma');
 
     Route::get('role/permission/{id}', 'RoleController@permission')->name('role.permission');
     Route::post('role/set_permission', 'RoleController@setPermission')->name('role.setPermission');
@@ -73,6 +76,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 
     //Route::get('products/getbarcode', 'ProductController@getBarcode');
     Route::post('products/product-data', 'ProductController@productData');
+    Route::post('products/productinactive-data', 'ProductController@productInactiveData');
     Route::get('products/gencode', 'ProductController@generateCode');
     Route::get('products/search', 'ProductController@search');
     Route::get('products/saleunit/{id}', 'ProductController@saleUnit');

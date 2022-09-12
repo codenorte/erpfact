@@ -54,6 +54,10 @@ class ProductController extends Controller
             7 => 'unit_id',
             8 => 'price' 
         );
+
+        //echo json_encode($request->all());
+        //return response()->json(array('data'=>$request->all()),200);
+
         
         $totalData = Product::where('is_active', true)->count();
         $totalFiltered = $totalData; 
@@ -87,6 +91,7 @@ class ProductController extends Controller
                             ['products.code', 'LIKE', "%{$search}%"],
                             ['products.is_active', true]
                         ])
+                        /*
                         ->orWhere([
                             ['categories.name', 'LIKE', "%{$search}%"],
                             ['categories.is_active', true],
@@ -97,6 +102,7 @@ class ProductController extends Controller
                             ['brands.is_active', true],
                             ['products.is_active', true]
                         ])
+                        */
                         ->offset($start)
                         ->limit($limit)
                         ->orderBy($order,$dir)->get();
@@ -112,6 +118,7 @@ class ProductController extends Controller
                                 ['products.code', 'LIKE', "%{$search}%"],
                                 ['products.is_active', true]
                             ])
+                            /*
                             ->orWhere([
                                 ['categories.name', 'LIKE', "%{$search}%"],
                                 ['categories.is_active', true],
@@ -122,6 +129,7 @@ class ProductController extends Controller
                                 ['brands.is_active', true],
                                 ['products.is_active', true]
                             ])
+                            */
                             ->count();
         }
         $data = array();
@@ -134,13 +142,19 @@ class ProductController extends Controller
                 $product_image = explode(",", $product->image);
                 $product_image = htmlspecialchars($product_image[0]);
                 $nestedData['image'] = '<img src="'.url('images/product', $product_image).'" height="80" width="80">';
-                $nestedData['name'] = $product->name;
+                $nestedData['name'] = $product->name."<br><small class='badge badge-success'>activo</small>";
                 $nestedData['code'] = $product->code;
                 if($product->brand_id)
                     $nestedData['brand'] = $product->brand->title;
                 else
-                    $nestedData['brand'] = "N/A";
-                $nestedData['category'] = $product->category->name;
+                    $nestedData['brand'] = "S/N";
+                //estado de categoria
+                if ($product->category->is_active==true)
+                    $category_stado='<small class="badge badge-success">activo</small>';
+                else
+                    $category_stado='<small class="badge badge-danger">inactivo</small>';
+
+                $nestedData['category'] = $product->category->name.'<br>'.$category_stado;
                 $nestedData['qty'] = $product->qty;
                 if($product->unit_id)
                     $nestedData['unit'] = $product->unit->unit_name;
@@ -189,7 +203,177 @@ class ProductController extends Controller
             "draw"            => intval($request->input('draw')),  
             "recordsTotal"    => intval($totalData),  
             "recordsFiltered" => intval($totalFiltered), 
-            "data"            => $data   
+            "data"            => $data,
+            "request"            => $request->all()   
+        );
+            
+        echo json_encode($json_data);
+    }
+
+    //listar productos inactivos
+    public function productInactiveData(Request $request)
+    {
+        $columns = array( 
+            2 => 'name', 
+            3 => 'code',
+            4 => 'brand_id',
+            5 => 'category_id',
+            6 => 'qty',
+            7 => 'unit_id',
+            8 => 'price' 
+        );
+
+        //echo json_encode($request->all());
+        //return response()->json(array('data'=>$request->all()),200);
+
+        
+        $totalData = Product::where('is_active', false)->count();
+        $totalFiltered = $totalData; 
+
+        if($request->input('length') != -1)
+            $limit = $request->input('length');
+        else
+            $limit = $totalData;
+        $start = $request->input('start');
+        $order = 'products.'.$columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+        if(empty($request->input('search.value'))){
+            $products = Product::with('category', 'brand', 'unit')->offset($start)
+                        ->where('is_active', false)
+                        ->limit($limit)
+                        ->orderBy($order,$dir)
+                        ->get();
+        }
+        else
+        {
+            $search = $request->input('search.value'); 
+            $products =  Product::select('products.*')
+                        ->with('category', 'brand', 'unit')
+                        ->join('categories', 'products.category_id', '=', 'categories.id')
+                        ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
+                        ->where([
+                            ['products.name', 'LIKE', "%{$search}%"],
+                            ['products.is_active', false]
+                        ])
+                        ->orWhere([
+                            ['products.code', 'LIKE', "%{$search}%"],
+                            ['products.is_active', false]
+                        ])
+                        /*
+                        ->orWhere([
+                            ['categories.name', 'LIKE', "%{$search}%"],
+                            ['categories.is_active', true],
+                            ['products.is_active', false]
+                        ])
+                        ->orWhere([
+                            ['brands.title', 'LIKE', "%{$search}%"],
+                            ['brands.is_active', true],
+                            ['products.is_active', false]
+                        ])
+                        */
+                        ->offset($start)
+                        ->limit($limit)
+                        ->orderBy($order,$dir)->get();
+
+            $totalFiltered = Product::
+                            join('categories', 'products.category_id', '=', 'categories.id')
+                            ->leftjoin('brands', 'products.brand_id', '=', 'brands.id')
+                            ->where([
+                                ['products.name','LIKE',"%{$search}%"],
+                                ['products.is_active', false]
+                            ])
+                            ->orWhere([
+                                ['products.code', 'LIKE', "%{$search}%"],
+                                ['products.is_active', false]
+                            ])
+                            /*
+                            ->orWhere([
+                                ['categories.name', 'LIKE', "%{$search}%"],
+                                ['categories.is_active', true],
+                                ['products.is_active', false]
+                            ])
+                            ->orWhere([
+                                ['brands.title', 'LIKE', "%{$search}%"],
+                                ['brands.is_active', true],
+                                ['products.is_active', false]
+                            ])
+                            */
+                            ->count();
+        }
+        $data = array();
+        if(!empty($products))
+        {
+            foreach ($products as $key=>$product)
+            {
+                $nestedData['id'] = $product->id;
+                $nestedData['key'] = $key;
+                $product_image = explode(",", $product->image);
+                $product_image = htmlspecialchars($product_image[0]);
+                $nestedData['image'] = '<img src="'.url('images/product', $product_image).'" height="80" width="80">';
+                $nestedData['name'] = $product->name."<br><small class='badge badge-danger'>inactivo</small>";
+                $nestedData['code'] = $product->code;
+                if($product->brand_id)
+                    $nestedData['brand'] = $product->brand->title;
+                else
+                    $nestedData['brand'] = "S/N";
+
+                //estado de categoria
+                if ($product->category->is_active==true)
+                    $category_stado='<small class="badge badge-success">activo</small>';
+                else
+                    $category_stado='<small class="badge badge-danger">inactivo</small>';
+
+                $nestedData['category'] = $product->category->name.'<br>'.$category_stado;
+                $nestedData['qty'] = $product->qty;
+                if($product->unit_id)
+                    $nestedData['unit'] = $product->unit->unit_name;
+                else
+                    $nestedData['unit'] = 'N/A';
+                
+                $nestedData['price'] = $product->price;
+                $nestedData['options'] = '<div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
+                              <span class="caret"></span>
+                              <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                            <li>
+                                <button="type" class="btn btn-link view"><i class="fa fa-eye"></i> '.trans('file.View').'</button>
+                            </li>';
+                if(in_array("products-edit", $request['all_permission']))
+                    $nestedData['options'] .= '<li>
+                            <a href="'.route('products.edit', $product->id).'" class="btn btn-link"><i class="fa fa-edit"></i> '.trans('file.edit').'</a>
+                        </li>';
+                if(in_array("products-delete", $request['all_permission']))
+                    $nestedData['options'] .= \Form::open(["route" => ["products.destroy", $product->id], "method" => "DELETE"] ).'
+                            <li>
+                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> '.trans("file.delete").'</button> 
+                            </li>'.\Form::close().'
+                        </ul>
+                    </div>';
+                // data for product details by one click
+                if($product->tax_id)
+                    $tax = Tax::find($product->tax_id)->name;
+                else
+                    $tax = "N/A";
+
+                if($product->tax_method == 1)
+                    $tax_method = trans('file.Exclusive');
+                else
+                    $tax_method = trans('file.Inclusive');
+
+                $nestedData['product'] = array( '[ "'.$product->type.'"', ' "'.$product->name.'"', ' "'.$product->code.'"', ' "'.$nestedData['brand'].'"', ' "'.$nestedData['category'].'"', ' "'.$nestedData['unit'].'"', ' "'.$product->cost.'"', ' "'.$product->price.'"', ' "'.$tax.'"', ' "'.$tax_method.'"', ' "'.$product->alert_quantity.'"', ' "'.preg_replace('/\s+/S', " ", $product->product_details).'"', ' "'.$product->id.'"', ' "'.$product->product_list.'"', ' "'.$product->qty_list.'"', ' "'.$product->price_list.'"', ' "'.$product->qty.'"', ' "'.$product->image.'"]'
+                );
+                //$nestedData['imagedata'] = DNS1D::getBarcodePNG($product->code, $product->barcode_symbology);
+                $data[] = $nestedData;
+            }
+        }
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),  
+            "recordsTotal"    => intval($totalData),  
+            "recordsFiltered" => intval($totalFiltered), 
+            "data"            => $data,
+            "request"            => $request->all()   
         );
             
         echo json_encode($json_data);
